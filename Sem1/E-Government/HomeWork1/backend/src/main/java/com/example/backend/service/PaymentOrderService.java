@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.Exception.InvalidDataParameters;
 import com.example.backend.dto.PaymentOrderDto;
+import com.example.backend.enums.PayerType;
 import com.example.backend.model.PaymentOrder;
 import com.example.backend.repository.PaymentOrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +46,25 @@ public class PaymentOrderService {
 
         return (total % IBAN_MODULUS) == 1;
     }
+    private long calculateDiscountedSum(long sum, PayerType payerType){
+        if (payerType.equals(PayerType.EMPLOYEE)) {
+            return Math.round(0.8 * sum);
+        }else if (payerType.equals(PayerType.RETIRED)){
+            return Math.round(0.75 * sum);
+        }else if (payerType.equals(PayerType.STUDENT)){
+            return Math.round(0.70* sum);
+        }else if (payerType.equals(PayerType.OTHER)){
+            return sum;
+        }
+        return sum;
+    }
     public PaymentOrder save(PaymentOrderDto paymentOrderDto) throws InvalidDataParameters {
         if (!isIbanValid(paymentOrderDto.getPayerIban())){
             throw new InvalidDataParameters("Invalid Iban");
         }
         return paymentOrderRepository.save(
                 PaymentOrder.builder()
-                        .sum(paymentOrderDto.getSum())
+                        .sum(calculateDiscountedSum(paymentOrderDto.getSum(),paymentOrderDto.getPayerType()))
                         .receiverIban(paymentOrderDto.getReceiverIban())
                         .payerName(paymentOrderDto.getPayerName())
                         .payerIban(paymentOrderDto.getPayerIban())

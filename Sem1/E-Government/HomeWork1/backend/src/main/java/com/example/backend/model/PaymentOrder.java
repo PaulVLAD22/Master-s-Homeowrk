@@ -25,7 +25,7 @@ public class PaymentOrder {
     private String payerIban;
     @Enumerated(EnumType.STRING)
     private PayerType payerType;
-    private int sum;
+    private long sum;
     private String receiverName;
     private String receiverIban;
 }

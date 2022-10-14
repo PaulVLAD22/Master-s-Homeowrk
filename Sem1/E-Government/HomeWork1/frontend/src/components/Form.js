@@ -34,13 +34,53 @@ const Form = () => {
         if (res.ok) {
           setError('');
           alert('Payment Order Sent!');
+        } else {
+          throw new Error('Something went wrong');
         }
-        throw new Error('Something went wrong');
       })
       .then(response => {
         console.log(response);
       })
       .catch(err => setError('Error!'));
+  };
+
+  const generatePaymentOrder = () => {
+    if (details.payerType === '') {
+      setError('Alegeti ocupatia curenta!');
+      return;
+    }
+    if (!isValid(details.payerIban) || !isValid(details.receiverIban)) {
+      setError('IBAN invalid!');
+      return;
+    }
+    if (!Number.isInteger(Number(details.sum))) {
+      setError('Suma trebuie sa fie un numar intreg!');
+      return;
+    }
+    const textString =
+      'Platitor : ' +
+      details.payerName +
+      '\nCont Platitor: ' +
+      details.payerIban +
+      '\nSuma: ' +
+      details.sum +
+      '\nBeneficiar: ' +
+      details.receiverName +
+      '\nCont Beneficiar: ' +
+      details.receiverIban;
+    var element = document.createElement('a');
+    element.setAttribute(
+      'href',
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(textString)
+    );
+    element.setAttribute('download', 'Ordin_de_plata.txt');
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
   };
   const handleSubmit = e => {
     e.preventDefault();
@@ -73,7 +113,7 @@ const Form = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <VStack gap="10" padding="5" shadow="dark-lg" borderRadius="lg">
+      <VStack padding="5" shadow="dark-lg" borderRadius="lg">
         {error != '' && <Text color="red.500">{error}</Text>}
         <FormControl>
           <FormLabel htmlFor="payerName">Platitor:</FormLabel>
@@ -157,6 +197,7 @@ const Form = () => {
         <Button colorScheme="teal" type="submit">
           Submit
         </Button>
+        <Button onClick={generatePaymentOrder}>Ordin Plata</Button>
       </VStack>
     </form>
   );

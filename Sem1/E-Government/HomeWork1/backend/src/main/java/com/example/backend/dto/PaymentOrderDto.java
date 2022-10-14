@@ -12,7 +12,7 @@ public class PaymentOrderDto {
     String payerName;
     String payerIban;
     PayerType payerType;
-    int sum;
+    long sum;
     String receiverName;
     String receiverIban;
 }
