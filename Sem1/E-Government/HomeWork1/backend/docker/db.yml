@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  db:
+  db_egov_hmw1:
     image: postgres:14.2
-    container_name: db
+    container_name: db_e_gov_hw1
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -11,7 +11,7 @@ services:
     ports:
       - "5431:5432"
     volumes:
-      - db:/var/lib/postgresql/data
+      - db_egov_hmw1:/var/lib/postgresql/e-gov/hw1/data
 volumes:
-  db:
+  db_egov_hmw1:
     driver: local
