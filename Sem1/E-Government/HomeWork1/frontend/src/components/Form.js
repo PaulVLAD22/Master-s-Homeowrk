@@ -3,52 +3,102 @@ import {
   FormControl,
   FormLabel,
   Input,
-  VStack,
   Select,
+  VStack,
+  Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { isValid } from 'iban';
 
 const Form = () => {
   const [details, setDetails] = useState({
-    payer: '',
-    payerAccount: '',
-    sum: '',
-    receiver: '',
-    receiverAccount: '',
-    payerType: '',
+    payerName: 'Marian',
+    payerIban: 'RO62BREL0005505440400100',
+    sum: '22',
+    receiverName: 'Marian2',
+    receiverIban: 'RO62BREL0005505440400100',
+    payerType: 'STUDENT',
   });
+  const [error, setError] = useState('');
+  const serverUrl = 'http://localhost:8080/';
+
+  const sendRequest = details => {
+    fetch(serverUrl + 'add', {
+      method: 'post',
+      body: JSON.stringify(details),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => {
+        if (res.ok) {
+          setError('');
+          alert('Payment Order Sent!');
+        }
+        throw new Error('Something went wrong');
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => setError('Error!'));
+  };
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(details);
+    setError('');
+    if (details.payerType === '') {
+      setError('Alegeti ocupatia curenta!');
+      return;
+    }
+    if (!isValid(details.payerIban) || !isValid(details.receiverIban)) {
+      setError('IBAN invalid!');
+      return;
+    }
+    if (!Number.isInteger(Number(details.sum))) {
+      setError('Suma trebuie sa fie un numar intreg!');
+      return;
+    }
+    sendRequest(details);
   };
-
+  const calculateDiscount = () => {
+    switch (details.payerType) {
+      case 'EMPLOYEE':
+        return '20%';
+      case 'STUDENT':
+        return '30%';
+      case 'RETIRED':
+        return '25%';
+      default:
+        return '0%';
+    }
+  };
   return (
     <form onSubmit={handleSubmit}>
       <VStack gap="10" padding="5" shadow="dark-lg" borderRadius="lg">
+        {error != '' && <Text color="red.500">{error}</Text>}
         <FormControl>
-          <FormLabel htmlFor="payer">Platitor:</FormLabel>
+          <FormLabel htmlFor="payerName">Platitor:</FormLabel>
           <Input
             required={true}
             size="md"
             variant="flushed"
-            name="payer"
-            id="payer"
+            name="payerName"
+            id="payerName"
             onChange={e => {
-              setDetails({ ...details, payer: e.target.value });
+              setDetails({ ...details, payerName: e.target.value });
             }}
-            value={details.payer}
+            value={details.payerName}
           />
-          <FormLabel htmlFor="payerAccount">Cont Platitor:</FormLabel>
+          <FormLabel htmlFor="payerIban">Cont Platitor:</FormLabel>
           <Input
             required={true}
             size="md"
             variant="flushed"
-            name="payerAccount"
-            id="payerAccount"
+            name="payerIban"
+            id="payerIban"
             onChange={e => {
-              setDetails({ ...details, payerAccount: e.target.value });
+              setDetails({ ...details, payerIban: e.target.value });
             }}
-            value={details.payerAccount}
+            value={details.payerIban}
           />
           <FormLabel htmlFor="sum">Suma:</FormLabel>
           <Input
@@ -63,42 +113,46 @@ const Form = () => {
             }}
             value={details.sum}
           />
-          <FormLabel htmlFor="receiver">Beneficiar:</FormLabel>
+          <FormLabel htmlFor="receiverName">Beneficiar:</FormLabel>
           <Input
             required={true}
             size="md"
             variant="flushed"
-            name="receiver"
-            id="receiver"
+            name="receiverName"
+            id="receiverName"
             onChange={e => {
-              setDetails({ ...details, receiver: e.target.value });
+              setDetails({ ...details, receiverName: e.target.value });
             }}
-            value={details.receiver}
+            value={details.receiverName}
           />
-          <FormLabel htmlFor="receiverAccount">Cont Beneficiar:</FormLabel>
+          <FormLabel htmlFor="receiverIban">Cont Beneficiar:</FormLabel>
           <Input
             required={true}
             size="md"
             variant="flushed"
-            name="receiverAccount"
-            id="receiverAccount"
+            name="receiverIban"
+            id="receiverIban"
             onChange={e => {
-              setDetails({ ...details, receiverAccount: e.target.value });
+              setDetails({ ...details, receiverIban: e.target.value });
             }}
-            value={details.receiverAcount}
+            value={details.receiverIban}
           />
           <Select
-            mt="10"
+            my="5"
             onChange={e =>
               setDetails({ ...details, payerType: e.target.value })
             }
-            placeholder="Alegeti Ocupatia"
+            value={details.payerType}
+            placeholder="Ocupatia Curenta:"
           >
-            <option value="student">Student</option>
-            <option value="employee">Angajat</option>
-            <option value="retired">Pensionar</option>
-            <option value="other">Other</option>
+            <option value="STUDENT">Student</option>
+            <option value="EMPLOYEE">Angajat</option>
+            <option value="RETIRED">Pensionar</option>
+            <option value="OTHER">Other</option>
           </Select>
+          {details.payerType !== '' && (
+            <Text>Discount : {calculateDiscount()}</Text>
+          )}
         </FormControl>
         <Button colorScheme="teal" type="submit">
           Submit

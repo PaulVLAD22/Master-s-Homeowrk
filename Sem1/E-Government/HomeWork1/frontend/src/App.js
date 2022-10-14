@@ -1,17 +1,5 @@
+import { Box, Center, ChakraProvider, theme } from '@chakra-ui/react';
 import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-  Center,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
 import Form from './components/Form';
 
 function App() {
