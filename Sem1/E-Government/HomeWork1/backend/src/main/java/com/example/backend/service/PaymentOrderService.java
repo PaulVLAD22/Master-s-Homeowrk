@@ -1,8 +1,9 @@
 package com.example.backend.service;
 
-import com.example.backend.Exception.InvalidDataParameters;
+import com.example.backend.exception.InvalidDataParametersException;
 import com.example.backend.dto.PaymentOrderDto;
 import com.example.backend.enums.PayerType;
+import com.example.backend.exception.NullFieldsException;
 import com.example.backend.model.PaymentOrder;
 import com.example.backend.repository.PaymentOrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,10 +59,27 @@ public class PaymentOrderService {
         }
         return sum;
     }
-    public PaymentOrder save(PaymentOrderDto paymentOrderDto) throws InvalidDataParameters {
-        if (!isIbanValid(paymentOrderDto.getPayerIban())){
-            throw new InvalidDataParameters("Invalid Iban");
+    private Boolean checkNonNullFields(PaymentOrderDto paymentOrderDto) {
+        return (paymentOrderDto.getSum()==null || paymentOrderDto.getPayerType()==null
+        || paymentOrderDto.getPayerIban()==null || paymentOrderDto.getPayerName()==null
+                || paymentOrderDto.getReceiverName()==null || paymentOrderDto.getReceiverIban()==null);
+    }
+    private Boolean checkNonEmptyFields(PaymentOrderDto paymentOrderDto){
+        return (paymentOrderDto.getSum()==0 || paymentOrderDto.getPayerIban().equals("")||
+                paymentOrderDto.getPayerName().equals("") || paymentOrderDto.getReceiverName().equals("")||
+                paymentOrderDto.getReceiverIban().equals(""));
+    }
+    public PaymentOrder save(PaymentOrderDto paymentOrderDto) throws InvalidDataParametersException, NullFieldsException {
+        if (Boolean.TRUE.equals(checkNonNullFields(paymentOrderDto))){
+            throw new NullFieldsException("Null Fields");
         }
+        if (Boolean.TRUE.equals(checkNonEmptyFields(paymentOrderDto))){
+            throw new InvalidDataParametersException("Empty Fields");
+        }
+        if (!isIbanValid(paymentOrderDto.getPayerIban())){
+            throw new InvalidDataParametersException("Invalid Iban");
+        }
+
         return paymentOrderRepository.save(
                 PaymentOrder.builder()
                         .sum(calculateDiscountedSum(paymentOrderDto.getSum(),paymentOrderDto.getPayerType()))
