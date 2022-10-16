@@ -4,11 +4,11 @@ import {
   FormLabel,
   Input,
   Select,
-  VStack,
   Text,
+  VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 import { isValid } from 'iban';
+import { useState } from 'react';
 
 const Form = () => {
   const [details, setDetails] = useState({

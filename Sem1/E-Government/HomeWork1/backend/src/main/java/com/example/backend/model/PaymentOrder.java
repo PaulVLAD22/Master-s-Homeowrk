@@ -3,7 +3,9 @@ package com.example.backend.model;
 import com.example.backend.enums.PayerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
