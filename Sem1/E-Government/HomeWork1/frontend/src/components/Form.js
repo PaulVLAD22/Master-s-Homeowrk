@@ -16,7 +16,7 @@ const Form = () => {
     payerIban: 'RO62BREL0005505440400100',
     sum: '22',
     receiverName: 'Marian2',
-    receiverIban: 'RO62BREL0005505440400100',
+    receiverIban: 'RO49AAAA1B31007593840000',
     payerType: 'STUDENT',
   });
   const [error, setError] = useState('');
@@ -34,6 +34,14 @@ const Form = () => {
         if (res.ok) {
           setError('');
           alert('Payment Order Sent!');
+          setDetails({
+            payerName: '',
+            payerIban: '',
+            sum: '',
+            receiverName: '',
+            receiverIban: '',
+            payerType: 'STUDENT',
+          });
         } else {
           throw new Error('Something went wrong');
         }
@@ -96,6 +104,10 @@ const Form = () => {
     }
     if (!Number.isInteger(Number(details.sum))) {
       setError('Suma trebuie sa fie un numar intreg!');
+      return;
+    }
+    if (details.payerIban === details.receiverIban) {
+      setError('IBAN-urile trebuie sa fie diferite!');
       return;
     }
     sendRequest(details);
