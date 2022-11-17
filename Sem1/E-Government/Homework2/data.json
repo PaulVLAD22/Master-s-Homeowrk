@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "LAAA",
+    "payer_type": "STUDENT",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Marian2",
+    "sum": 15
+  },
+  {
+    "id": 2,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "Marian",
+    "payer_type": "STUDENT",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Marian2",
+    "sum": 15
+  },
+  {
+    "id": 3,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "Marian",
+    "payer_type": "STUDENT",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Marian2",
+    "sum": 15
+  },
+  {
+    "id": 4,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "Marian",
+    "payer_type": "STUDENT",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Marian2",
+    "sum": 15
+  },
+  {
+    "id": 5,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "Marian",
+    "payer_type": "EMPLOYEE",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Marian2",
+    "sum": 18
+  },
+  {
+    "id": 6,
+    "payer_iban": "RO62BREL0005505440400100",
+    "payer_name": "Andrei",
+    "payer_type": "EMPLOYEE",
+    "receiver_iban": "RO49AAAA1B31007593840000",
+    "receiver_name": "Mariana",
+    "sum": 40
+  }
+]

@@ -15,7 +15,7 @@ const Form = () => {
     payerName: 'Marian',
     payerIban: 'RO62BREL0005505440400100',
     sum: '22',
-    receiverName: 'Marian2',
+    receiverName: 'Mariana',
     receiverIban: 'RO49AAAA1B31007593840000',
     payerType: 'STUDENT',
   });
@@ -108,6 +108,10 @@ const Form = () => {
     }
     if (details.payerIban === details.receiverIban) {
       setError('IBAN-urile trebuie sa fie diferite!');
+      return;
+    }
+    if (details.payerName === details.receiverName) {
+      setError('Numele trebuie sa fie diferite!');
       return;
     }
     sendRequest(details);
